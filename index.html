@@ -23,6 +23,7 @@
         <a href="#resumen">Resumen</a>
         <a href="#estadisticas">Estadísticas</a>
         <a href="#simulador">Simulador</a>
+        <a href="#como-funciona">¿Cómo funciona?</a>
         <a href="#visualizaciones">Visualizaciones</a>
         <a href="#acerca">Acerca de</a>
     </div>
@@ -140,8 +141,143 @@
                 <div class="pred-probs" id="pred-probs"></div>
                 <div id="pred-alerta"></div>
                 <div class="pred-reco" id="pred-reco"></div>
+
+                <details class="vecinos-details">
+                    <summary>🔍 Ver los 13 suelos más parecidos al tuyo (cómo el modelo llegó a esta predicción)</summary>
+                    <p class="vecinos-explica">
+                        Estos son los 13 suelos del dataset SAGARPA-FAO más parecidos a los valores
+                        que has ingresado. La clase de fertilidad más frecuente entre ellos determina
+                        la predicción.
+                    </p>
+                    <div class="vecinos-tabla-wrap">
+                        <table class="vecinos-tabla">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Estado</th>
+                                    <th>Tipo de suelo</th>
+                                    <th>Distancia</th>
+                                    <th>Clase</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vecinos-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="vecinos-votos" id="vecinos-votos"></div>
+                </details>
             </div>
         </div>
+    </section>
+
+    <!-- ===================== CÓMO FUNCIONA ===================== -->
+    <section id="como-funciona" class="section">
+        <h2>¿Cómo funciona la predicción?</h2>
+        <p>
+            El sistema usa un algoritmo llamado <strong>K-Nearest Neighbors (KNN)</strong>,
+            o "los k vecinos más cercanos". Es uno de los algoritmos de clasificación más
+            sencillos e intuitivos del aprendizaje automático.
+        </p>
+
+        <div class="knn-explain">
+            <div class="knn-diagram">
+                <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Nubes de fondo (clases) -->
+                    <circle cx="80" cy="90" r="55" fill="#e74c3c" opacity="0.12"/>
+                    <circle cx="220" cy="100" r="60" fill="#f39c12" opacity="0.12"/>
+                    <circle cx="180" cy="230" r="58" fill="#27ae60" opacity="0.12"/>
+                    <!-- Muestras Baja -->
+                    <circle cx="60" cy="80" r="6" fill="#e74c3c"/>
+                    <circle cx="90" cy="60" r="6" fill="#e74c3c"/>
+                    <circle cx="75" cy="105" r="6" fill="#e74c3c"/>
+                    <circle cx="105" cy="95" r="6" fill="#e74c3c"/>
+                    <circle cx="50" cy="115" r="6" fill="#e74c3c"/>
+                    <circle cx="115" cy="75" r="6" fill="#e74c3c"/>
+                    <!-- Muestras Media -->
+                    <circle cx="200" cy="85" r="6" fill="#f39c12"/>
+                    <circle cx="230" cy="70" r="6" fill="#f39c12"/>
+                    <circle cx="245" cy="105" r="6" fill="#f39c12"/>
+                    <circle cx="210" cy="115" r="6" fill="#f39c12"/>
+                    <circle cx="190" cy="125" r="6" fill="#f39c12"/>
+                    <circle cx="245" cy="135" r="6" fill="#f39c12"/>
+                    <!-- Muestras Alta -->
+                    <circle cx="155" cy="215" r="6" fill="#27ae60"/>
+                    <circle cx="180" cy="210" r="6" fill="#27ae60"/>
+                    <circle cx="200" cy="225" r="6" fill="#27ae60"/>
+                    <circle cx="170" cy="240" r="6" fill="#27ae60"/>
+                    <circle cx="195" cy="255" r="6" fill="#27ae60"/>
+                    <circle cx="150" cy="250" r="6" fill="#27ae60"/>
+                    <!-- Muestra nueva (azul, central) -->
+                    <circle cx="160" cy="160" r="9" fill="#3498db" stroke="white" stroke-width="2">
+                        <animate attributeName="r" values="9;11;9" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <!-- Círculo punteado mostrando vecindario -->
+                    <circle cx="160" cy="160" r="70" fill="none" stroke="#3498db"
+                            stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+                    <!-- Líneas a vecinos cercanos -->
+                    <line x1="160" y1="160" x2="190" y2="125" stroke="#3498db" stroke-width="1" opacity="0.4"/>
+                    <line x1="160" y1="160" x2="210" y2="115" stroke="#3498db" stroke-width="1" opacity="0.4"/>
+                    <line x1="160" y1="160" x2="200" y2="85"  stroke="#3498db" stroke-width="1" opacity="0.4"/>
+                    <line x1="160" y1="160" x2="105" y2="95"  stroke="#3498db" stroke-width="1" opacity="0.4"/>
+                    <line x1="160" y1="160" x2="155" y2="215" stroke="#3498db" stroke-width="1" opacity="0.4"/>
+                    <!-- Etiquetas -->
+                    <text x="80" y="35" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">Baja</text>
+                    <text x="220" y="40" text-anchor="middle" font-size="13" font-weight="bold" fill="#b9770e">Media</text>
+                    <text x="180" y="295" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e8449">Alta</text>
+                    <text x="160" y="185" text-anchor="middle" font-size="11" font-weight="bold" fill="#2874a6">Tu muestra</text>
+                </svg>
+            </div>
+
+            <div class="knn-steps">
+                <h3>El algoritmo en 4 pasos</h3>
+                <ol class="knn-steps-list">
+                    <li>
+                        <strong>Compara tu muestra con las 3,826 conocidas.</strong>
+                        Calcula la <em>distancia euclidiana</em> entre los valores que
+                        ingresaste y cada muestra del dataset. Es la misma fórmula del
+                        teorema de Pitágoras, pero en 7 dimensiones (una por cada
+                        variable usada).
+                    </li>
+                    <li>
+                        <strong>Elige las 13 muestras más parecidas.</strong>
+                        Ordena todas las distancias de menor a mayor y se queda con las
+                        13 más cercanas. Estas son tus "vecinas" en el espacio de
+                        características.
+                    </li>
+                    <li>
+                        <strong>Cuenta a qué clase pertenecen.</strong>
+                        Mira las etiquetas de fertilidad (Baja, Media, Alta) de esas 13
+                        vecinas. Por ejemplo: 8 son Alta, 4 son Media y 1 es Baja.
+                    </li>
+                    <li>
+                        <strong>La clase con más votos es tu predicción.</strong>
+                        En el ejemplo anterior, la respuesta sería "Alta". El porcentaje
+                        de votos de cada clase se muestra como probabilidad.
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="knn-analogy">
+            <strong>Una analogía cotidiana:</strong>
+            si te mudas a un barrio nuevo y quieres saber qué restaurantes le gustan a la
+            gente, podrías preguntarle a los 13 vecinos más cercanos. Si la mayoría
+            recomienda comida mexicana, esa probablemente sea la que más se consume
+            en el barrio. KNN hace exactamente eso, pero con datos de suelo.
+        </div>
+
+        <h3>Por qué se eligieron 7 variables y k=13</h3>
+        <p>
+            Se probaron sistemáticamente todas las combinaciones de <strong>k</strong>
+            (de 1 a 25 vecinos) y diferentes subconjuntos de variables, usando
+            <em>validación cruzada de 5 pliegues</em>. La mejor combinación fue
+            <strong>k = 13 vecinos</strong> y <strong>7 variables</strong> ordenadas
+            por mayor correlación con la fertilidad: N, SAND, CLAY, CEC, SILT, SAR y Mg.
+        </p>
+        <p>
+            Las otras 9 variables del dataset agregaban "ruido" al modelo: aportaban
+            poca información discriminante y bajaban la exactitud global. Mantener
+            solo las 7 más predictivas elevó la exactitud de 60.31 % a 72.32 %.
+        </p>
     </section>
 
     <!-- ===================== VISUALIZACIONES ===================== -->

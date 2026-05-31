@@ -540,6 +540,51 @@ window.addEventListener('unhandledrejection', (e) => {
             <ul>${reco.consejos.map(c => `<li>${c}</li>`).join('')}</ul>
         `;
         document.getElementById('pred-reco').innerHTML = recoHtml;
+
+        // Panel de los 13 vecinos
+        renderVecinos(resultado);
+    }
+
+    // =====================================================================
+    // Mostrar los 13 vecinos más cercanos del modelo (transparencia KNN)
+    // =====================================================================
+    function renderVecinos(resultado) {
+        const tbody = document.getElementById('vecinos-tbody');
+        const votosDiv = document.getElementById('vecinos-votos');
+        if (!tbody) return;
+
+        // Encontrar la distancia máxima entre los vecinos para normalizar visualmente
+        const maxDist = Math.max(...resultado.vecinos.map(v => v.distancia));
+
+        tbody.innerHTML = resultado.vecinos.map((v, i) => {
+            const d = v.datos;
+            const cls = CLASS_NAMES[v.clase].toLowerCase();
+            const pct = (v.distancia / maxDist) * 100;
+            return `
+                <tr>
+                    <td class="vecino-num">${i + 1}</td>
+                    <td>${d.STATE || '—'}</td>
+                    <td>${d.SOIL_TYPE || '—'}</td>
+                    <td>
+                        <div class="dist-bar">
+                            <div class="dist-fill" style="width: ${pct}%"></div>
+                            <span class="dist-val">${v.distancia.toFixed(2)}</span>
+                        </div>
+                    </td>
+                    <td><span class="badge-clase ${cls}">${CLASS_NAMES[v.clase]}</span></td>
+                </tr>
+            `;
+        }).join('');
+
+        // Resumen de votos
+        const votos = resultado.votos;
+        votosDiv.innerHTML = `
+            <strong>Conteo de votos:</strong>
+            <span class="voto-baja">Baja: ${votos[0]}</span>
+            <span class="voto-media">Media: ${votos[1]}</span>
+            <span class="voto-alta">Alta: ${votos[2]}</span>
+            <span class="voto-resultado">→ Predicción: <strong>${resultado.nombreClase}</strong></span>
+        `;
     }
 
 })();

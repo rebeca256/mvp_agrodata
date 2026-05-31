@@ -119,11 +119,13 @@ function predecirKNN(muestraNueva, datosEntrenamiento, parametros, k = K_VECINOS
     const muestraStd = estandarizar(muestraNueva, parametros, FEATURE_NAMES);
 
     // 2. Calcular distancia a cada muestra de entrenamiento
-    const distancias = datosEntrenamiento.map(d => {
+    const distancias = datosEntrenamiento.map((d, idx) => {
         const dStd = estandarizar(d, parametros, FEATURE_NAMES);
         return {
+            indice: idx,
             distancia: distanciaEuclidiana(muestraStd, dStd, FEATURE_NAMES),
-            clase: d.Output
+            clase: d.Output,
+            datos: d  // referencia a los datos completos del vecino
         };
     });
 
@@ -152,7 +154,8 @@ function predecirKNN(muestraNueva, datosEntrenamiento, parametros, k = K_VECINOS
         prediccion: claseGanadora,
         nombreClase: CLASS_NAMES[claseGanadora],
         probabilidades: probabilidades,
-        vecinos: vecinos
+        vecinos: vecinos,
+        votos: votos
     };
 }
 
