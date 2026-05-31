@@ -26,6 +26,7 @@
         <a href="#como-funciona">¿Cómo funciona?</a>
         <a href="#visualizaciones">Visualizaciones</a>
         <a href="#acerca">Acerca de</a>
+        <a href="#privacidad">Privacidad</a>
     </div>
 </nav>
 
@@ -423,11 +424,75 @@
         </p>
     </section>
 
+    <!-- ===================== PRIVACIDAD Y TÉRMINOS ===================== -->
+    <section id="privacidad" class="section">
+        <h2>Privacidad, términos y limitaciones</h2>
+        <p>
+            AgroDataLocal es un <strong>prototipo académico de carácter educativo</strong>. Antes de
+            usar las predicciones lee con atención esta sección — describe qué datos recopilamos
+            (ninguno), bajo qué términos se usa la herramienta y qué <strong>limitaciones reales</strong>
+            tiene el modelo.
+        </p>
+
+        <div class="privacidad-grid">
+            <article class="privacidad-card">
+                <h3>🔒 Política de privacidad</h3>
+                <p>Esta aplicación <strong>no recolecta ningún dato personal</strong>. Específicamente:</p>
+                <ul>
+                    <li><strong>No hay backend.</strong> Todo el cálculo del modelo KNN, las estadísticas y los gráficos se ejecutan dentro de tu navegador.</li>
+                    <li><strong>No usamos cookies</strong> ni almacenamos información en <code>localStorage</code> ni <code>sessionStorage</code>.</li>
+                    <li><strong>Los valores que ajustas con los sliders</strong> nunca se envían a ningún servidor — viven y mueren en tu pestaña.</li>
+                    <li><strong>No hay analíticas</strong> (Google Analytics, Meta Pixel u otros rastreadores).</li>
+                    <li>El sitio se aloja en <strong>GitHub Pages</strong>, que registra dirección IP y user-agent como cualquier servidor web. Ver la <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">declaración de privacidad de GitHub</a>.</li>
+                </ul>
+            </article>
+
+            <article class="privacidad-card">
+                <h3>📄 Términos de uso</h3>
+                <p>Al cargar esta página aceptas las siguientes condiciones:</p>
+                <ul>
+                    <li>La aplicación se ofrece <strong>tal cual ("AS IS")</strong>, sin garantía expresa o implícita de ningún tipo.</li>
+                    <li>Su uso es <strong>libre y gratuito</strong> con fines educativos, de investigación o de demostración.</li>
+                    <li>El código fuente está publicado abiertamente en <a href="https://github.com/rebeca256/mvp_agrodata" target="_blank" rel="noopener">github.com/rebeca256/mvp_agrodata</a>.</li>
+                    <li>El dataset SAGARPA-FAO 2012 utilizado es de acceso público; la cita académica completa está en la sección "Acerca de".</li>
+                    <li>Los autores no se hacen responsables del uso que se dé a las predicciones generadas por la aplicación.</li>
+                </ul>
+            </article>
+
+            <article class="privacidad-card privacidad-card-warning">
+                <h3>⚠ Limitaciones del modelo</h3>
+                <p>Es importante que conozcas estos límites antes de tomar decisiones a partir de las predicciones:</p>
+                <ul>
+                    <li><strong>No sustituye un análisis profesional de suelo.</strong> Para decisiones agronómicas reales, acude a un laboratorio de suelos acreditado o a un técnico agrónomo certificado.</li>
+                    <li><strong>Exactitud del modelo: ≈ 72 %</strong>, con intervalo de confianza al 95 % (método de Wilson). Es decir, aproximadamente <em>1 de cada 4 predicciones puede ser incorrecta</em>.</li>
+                    <li><strong>Alcance geográfico:</strong> el dataset proviene de muestras de suelo de <strong>México</strong>. Predicciones para otras regiones no están validadas.</li>
+                    <li><strong>Variables limitadas:</strong> el modelo solo usa 7 variables fisicoquímicas (N, SAND, CLAY, CEC, SILT, SAR, Mg). No considera clima local, manejo histórico, profundidad de muestreo, materia orgánica residual ni biota del suelo.</li>
+                    <li><strong>Las recomendaciones generadas son orientativas</strong> y no constituyen asesoría agronómica profesional.</li>
+                </ul>
+            </article>
+        </div>
+
+        <p class="privacidad-aviso">
+            Si tienes preguntas o quieres reportar un problema, abre un issue en el
+            <a href="https://github.com/rebeca256/mvp_agrodata/issues" target="_blank" rel="noopener">repositorio de GitHub</a>.
+            Última actualización: mayo de 2026.
+        </p>
+    </section>
+
 </main>
 
 <footer>
-    <div class="container">
-        <p>© 2026 · Licenciatura en Ciencias de Datos para Negocios · UNRC</p>
+    <div class="container footer-content">
+        <p><strong>AgroDataLocal</strong> · Proyecto Integrador 2.º semestre</p>
+        <p>Licenciatura en Ciencias de Datos para Negocios · Universidad Nacional Rosario Castellanos · México</p>
+        <p class="footer-links">
+            <a href="#privacidad">Privacidad y términos</a>
+            <span class="footer-sep">·</span>
+            <a href="https://github.com/rebeca256/mvp_agrodata" target="_blank" rel="noopener">Código fuente</a>
+            <span class="footer-sep">·</span>
+            <a href="#acerca">Sobre el dataset</a>
+        </p>
+        <p class="footer-copy">© 2026 · Prototipo educativo, sin fines comerciales</p>
     </div>
 </footer>
 
