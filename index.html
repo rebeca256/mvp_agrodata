@@ -3,86 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgroDataLocal — Próximamente</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #27ae60 0%, #2c3e50 100%);
-            color: white;
-            padding: 24px;
-        }
-        .card {
-            max-width: 640px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 18px;
-            padding: 48px 36px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-        .emoji { font-size: 4em; margin-bottom: 16px; display: block; }
-        h1 { font-size: 2.4em; margin-bottom: 12px; }
-        .subtitle {
-            font-size: 1.15em;
-            opacity: 0.9;
-            font-style: italic;
-            margin-bottom: 28px;
-        }
-        .info {
-            background: rgba(0, 0, 0, 0.18);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 24px 0;
-            text-align: left;
-            font-size: 0.98em;
-            line-height: 1.7;
-        }
-        .info strong { color: #ffd700; }
-        .badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        .badge {
-            background: rgba(255, 255, 255, 0.18);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 0.85em;
-        }
-        .footer {
-            margin-top: 28px;
-            font-size: 0.85em;
-            opacity: 0.7;
-        }
-    </style>
+    <title>AgroDataLocal — Diagnóstico de Fertilidad de Suelo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <div class="card">
-        <span class="emoji">🌱</span>
-        <h1>AgroDataLocal</h1>
-        <p class="subtitle">Sistema de Diagnóstico de Fertilidad de Suelo</p>
 
-        <div class="info">
-            <strong>👋 ¡Hola! Esta es una página de prueba.</strong><br><br>
-            La aplicación web completa está en desarrollo. Pronto encontrarás aquí:<br><br>
-            • Análisis estadístico de 880 muestras de suelo<br>
-            • Simulador interactivo con 12 variables<br>
-            • Predicción de fertilidad con K-Nearest Neighbors<br>
-            • Visualizaciones de resultados
-        </div>
-
-        <div class="badges">
-            <span class="badge">📊 KNN en JavaScript</span>
-            <span class="badge">🎨 Sin frameworks</span>
-            <span class="badge">📱 Responsive</span>
-        </div>
-
-        <div class="footer">
-            Universidad Nacional Rosario Castellanos<br>
-            Ciencias de Datos para Negocios · Semestre 2 · 2026
-        </div>
+<header class="hero">
+    <div class="container">
+        <h1>🌱 AgroDataLocal</h1>
+        <p class="tagline">Sistema de Diagnóstico de Fertilidad de Suelo para Pequeños Productores</p>
+        <p class="meta">Universidad Nacional Rosario Castellanos · Ciencias de Datos para Negocios · Semestre 2 · 2026</p>
     </div>
+</header>
+
+<nav class="navbar">
+    <div class="container">
+        <a href="#resumen">Resumen</a>
+        <a href="#estadisticas">Estadísticas</a>
+        <a href="#simulador">Simulador</a>
+        <a href="#visualizaciones">Visualizaciones</a>
+        <a href="#acerca">Acerca de</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <!-- ===================== RESUMEN ===================== -->
+    <section id="resumen" class="section">
+        <h2>Resumen del proyecto</h2>
+        <p>
+            <strong>AgroDataLocal</strong> es un sistema que clasifica la fertilidad del suelo de
+            parcelas agrícolas a partir de 12 variables fisicoquímicas, utilizando el algoritmo
+            <strong>K-Nearest Neighbors (KNN)</strong>. El modelo fue entrenado con 880 muestras
+            de suelo mexicano y alcanza una exactitud del 82.39 %.
+        </p>
+        <p>
+            El propósito es ofrecer a pequeños productores una herramienta accesible para recibir
+            recomendaciones de fertilización basadas en datos, reduciendo costos y minimizando el
+            impacto ambiental por sobre-fertilización.
+        </p>
+
+        <div class="metric-grid">
+            <div class="metric-card"><div class="num">880</div><div class="lbl">muestras</div></div>
+            <div class="metric-card"><div class="num">12</div><div class="lbl">variables</div></div>
+            <div class="metric-card"><div class="num">3</div><div class="lbl">clases</div></div>
+            <div class="metric-card"><div class="num">82.39%</div><div class="lbl">exactitud</div></div>
+        </div>
+    </section>
+
+    <!-- ===================== ESTADÍSTICAS ===================== -->
+    <section id="estadisticas" class="section">
+        <h2>Análisis estadístico descriptivo</h2>
+        <p>
+            Para cada una de las 12 variables fisicoquímicas se calculan medidas de tendencia
+            central (media, mediana, moda) y medidas de dispersión (varianza, desviación estándar).
+            Estos cálculos se realizan <strong>en vivo en tu navegador</strong> a partir del
+            dataset cargado.
+        </p>
+
+        <div class="table-wrapper">
+            <table id="tabla-estadisticas">
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Media</th>
+                        <th>Mediana</th>
+                        <th>Moda</th>
+                        <th>Desv. estándar</th>
+                        <th>Varianza</th>
+                        <th>Mín</th>
+                        <th>Máx</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <h3>Distribución de clases</h3>
+        <div class="chart-container chart-container-small">
+            <canvas id="chart-distribucion"></canvas>
+        </div>
+
+        <h3>Correlación de cada variable con la fertilidad</h3>
+        <p>
+            Coeficiente de correlación de Pearson. El <strong>nitrógeno (N)</strong> destaca con
+            r = 0.707, confirmando que es el principal predictor de la fertilidad.
+        </p>
+        <div class="chart-container chart-container-small">
+            <canvas id="chart-correlaciones"></canvas>
+        </div>
+    </section>
+
+    <!-- ===================== SIMULADOR ===================== -->
+    <section id="simulador" class="section">
+        <h2>Simulador interactivo</h2>
+        <p>
+            Ajusta los <strong>12 valores fisicoquímicos del suelo</strong> y observa en vivo cómo
+            cambia la predicción del modelo KNN. Usa los botones de preset para cargar valores
+            promedio de cada clase de fertilidad.
+        </p>
+
+        <div class="preset-buttons">
+            <button class="btn btn-alta" data-clase="2">★ Cargar suelo de fertilidad ALTA</button>
+            <button class="btn btn-media" data-clase="1">Suelo de fertilidad MEDIA</button>
+            <button class="btn btn-baja" data-clase="0">Suelo de fertilidad BAJA</button>
+        </div>
+
+        <div class="simulator-grid">
+            <div class="sliders-panel">
+                <h3>Variables del suelo</h3>
+                <div id="sliders-container"></div>
+            </div>
+
+            <div class="radar-panel">
+                <h3>Comparación contra perfiles</h3>
+                <div class="chart-container">
+                    <canvas id="chart-radar"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="prediction-panel">
+            <h3>Predicción en vivo</h3>
+            <div id="prediction-result">
+                <div class="pred-clase">Fertilidad: <span id="pred-clase-nombre">—</span></div>
+                <div class="pred-probs" id="pred-probs"></div>
+                <div class="pred-reco" id="pred-reco"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== VISUALIZACIONES ===================== -->
+    <section id="visualizaciones" class="section">
+        <h2>Visualizaciones del análisis</h2>
+        <p>
+            Estas gráficas resumen los principales hallazgos del proyecto: distribución de los
+            datos, correlaciones, validación estadística, y los modelos matemáticos aplicados
+            (regresión por regla de Cramer y optimización por cálculo diferencial).
+        </p>
+
+        <div class="gallery">
+            <figure>
+                <img src="img/01_distribucion_clases.png" alt="Distribución de clases" loading="lazy">
+                <figcaption><strong>Figura 1.</strong> Distribución de las 880 muestras por nivel de fertilidad.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/02_correlacion_variables.png" alt="Correlación de variables" loading="lazy">
+                <figcaption><strong>Figura 2.</strong> Coeficientes de correlación con la fertilidad.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/03_medias_nitrogeno_por_clase.png" alt="Medias del nitrógeno por clase" loading="lazy">
+                <figcaption><strong>Figura 3.</strong> Media del nitrógeno por clase con barras de error.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/04_boxplot_nitrogeno.png" alt="Boxplot del nitrógeno" loading="lazy">
+                <figcaption><strong>Figura 4.</strong> Distribución del nitrógeno por clase + prueba t.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/05_regresion_cramer.png" alt="Regresión por Cramer" loading="lazy">
+                <figcaption><strong>Figura 5.</strong> Recta de regresión por la regla de Cramer.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/06_calculo_diferencial.png" alt="Cálculo diferencial" loading="lazy">
+                <figcaption><strong>Figura 6.</strong> Función de rendimiento y dosis óptima (N* = 100 kg/ha).</figcaption>
+            </figure>
+            <figure>
+                <img src="img/07_matriz_confusion.png" alt="Matriz de confusión" loading="lazy">
+                <figcaption><strong>Figura 7.</strong> Matriz de confusión del modelo KNN.</figcaption>
+            </figure>
+            <figure>
+                <img src="img/08_intervalo_confianza.png" alt="Intervalo de confianza" loading="lazy">
+                <figcaption><strong>Figura 8.</strong> Intervalo de confianza al 95 % para la exactitud.</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ===================== ACERCA DE ===================== -->
+    <section id="acerca" class="section">
+        <h2>Acerca del proyecto</h2>
+        <p>
+            Esta aplicación web es el componente interactivo del proyecto integrador
+            <strong>AgroDataLocal</strong>, desarrollado en el segundo semestre de la
+            Licenciatura en Ciencias de Datos para Negocios.
+        </p>
+
+        <h3>Tecnologías utilizadas</h3>
+        <ul>
+            <li><strong>HTML5 + CSS3</strong> para la estructura y los estilos.</li>
+            <li><strong>JavaScript vanilla</strong> para la lógica y el algoritmo KNN.</li>
+            <li><strong>Chart.js</strong> para las visualizaciones interactivas.</li>
+            <li><strong>GitHub Pages</strong> para el despliegue.</li>
+        </ul>
+
+        <h3>Metodología matemática</h3>
+        <ul>
+            <li><strong>Estadística descriptiva</strong>: media, mediana, moda, varianza, desviación estándar.</li>
+            <li><strong>Estadística inferencial</strong>: prueba t de dos medias, intervalo de confianza al 95 %.</li>
+            <li><strong>Álgebra lineal</strong>: distancia euclidiana entre vectores, regla de Cramer.</li>
+            <li><strong>Cálculo diferencial</strong>: optimización de la dosis de fertilización (N* = 100 kg/ha).</li>
+        </ul>
+
+        <h3>Conjunto de datos</h3>
+        <p>
+            880 muestras de suelo mexicano con 12 variables fisicoquímicas:
+            Nitrógeno (N), Fósforo (P), Potasio (K), pH, Conductividad eléctrica (EC), Carbono
+            orgánico (OC), Azufre (S), Zinc (Zn), Hierro (Fe), Cobre (Cu), Manganeso (Mn) y Boro (B).
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <p>© 2026 · Licenciatura en Ciencias de Datos para Negocios · UNRC</p>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="js/data.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/knn.js"></script>
+<script src="js/app.js"></script>
+
 </body>
 </html>
