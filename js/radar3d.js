@@ -18,11 +18,11 @@ class Radar3D {
         this.features = features;
         this.numAxes = features.length;
 
-        // Opciones por defecto
+        // Opciones por defecto (margin más amplio para acomodar labels en pill)
         this.opts = {
             width: 520,
             height: 520,
-            margin: 60,
+            margin: 80,
             tiltAngle: 0.45,
             levels: 5,
             maxValue: 100,
