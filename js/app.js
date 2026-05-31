@@ -93,6 +93,12 @@ window.addEventListener('unhandledrejection', (e) => {
             DEBUG.log('3. Ajustando escalador (media y std por variable)...');
             estado.parametrosEscalador = ajustarEscalador(DATASET, FEATURE_NAMES);
             DEBUG.ok('   Escalador ajustado');
+
+            DEBUG.log('4. Calculando umbral de anomalía (puede tardar 1-2s)...');
+            const t0 = performance.now();
+            estado.umbralAnomalia = calcularUmbralAnomalia(
+                DATASET, estado.parametrosEscalador, FEATURE_NAMES);
+            DEBUG.ok(`   Umbral anomalía calculado: ${estado.umbralAnomalia.toFixed(3)} (en ${((performance.now()-t0)/1000).toFixed(2)}s)`);
         } catch (e) {
             DEBUG.err('Error en pre-cálculos:', e.message, e.stack);
             throw e;
@@ -498,6 +504,34 @@ window.addEventListener('unhandledrejection', (e) => {
             `<span><strong>${nombre}:</strong> ${(resultado.probabilidades[i] * 100).toFixed(0)}%</span>`
         ).join('');
         document.getElementById('pred-probs').innerHTML = probsHtml;
+
+        // Evaluación de confiabilidad → mostrar banner si aplica
+        let bannerHtml = '';
+        if (estado.umbralAnomalia) {
+            const ev = evaluarConfiabilidad(
+                estado.valoresActuales, DATASET,
+                estado.parametrosEscalador, resultado, estado.umbralAnomalia);
+
+            if (ev.nivel === 'bajo' || ev.nivel === 'medio') {
+                const claseCSS = ev.nivel === 'bajo' ? 'alerta-baja' : 'alerta-media';
+                const icono = ev.nivel === 'bajo' ? '⚠' : 'ℹ';
+                const titulo = ev.nivel === 'bajo'
+                    ? 'Predicción poco confiable'
+                    : 'Atención sobre esta predicción';
+                const items = ev.problemas.map(p => `<li>${p.mensaje}</li>`).join('');
+                const nota = ev.nivel === 'bajo'
+                    ? '<p class="alerta-nota">Considera ajustar los valores a un rango más realista o consultar a un agrónomo antes de tomar decisiones.</p>'
+                    : '';
+                bannerHtml = `
+                    <div class="alerta ${claseCSS}">
+                        <div class="alerta-titulo">${icono} ${titulo}</div>
+                        <ul class="alerta-lista">${items}</ul>
+                        ${nota}
+                    </div>
+                `;
+            }
+        }
+        document.getElementById('pred-alerta').innerHTML = bannerHtml;
 
         // Recomendación
         const reco = RECOMENDACIONES[resultado.prediccion];

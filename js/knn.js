@@ -187,6 +187,109 @@ function calcularPerfilesClase(datos, features) {
 }
 
 // =====================================================================
+// Calcular el umbral de distancia anómala usando una muestra del dataset.
+// Una muestra cuya distancia promedio a sus k vecinos esté por encima de
+// este umbral se considera "fuera del dominio" del modelo entrenado.
+// =====================================================================
+function calcularUmbralAnomalia(datos, parametros, features, k = K_VECINOS) {
+    // Muestreo: tomamos máximo 500 muestras para que el cálculo sea rápido
+    const SAMPLE_SIZE = 500;
+    const indices = [];
+    if (datos.length <= SAMPLE_SIZE) {
+        for (let i = 0; i < datos.length; i++) indices.push(i);
+    } else {
+        const step = datos.length / SAMPLE_SIZE;
+        for (let i = 0; i < SAMPLE_SIZE; i++) {
+            indices.push(Math.floor(i * step));
+        }
+    }
+    const muestra = indices.map(i => datos[i]);
+    const datosStd = muestra.map(d => estandarizar(d, parametros, features));
+
+    const distanciasPromedio = [];
+    for (let i = 0; i < datosStd.length; i++) {
+        const distancias = [];
+        for (let j = 0; j < datosStd.length; j++) {
+            if (i === j) continue;
+            distancias.push(distanciaEuclidiana(datosStd[i], datosStd[j], features));
+        }
+        distancias.sort((a, b) => a - b);
+        const kDistancias = distancias.slice(0, k);
+        const prom = kDistancias.reduce((a, b) => a + b, 0) / k;
+        distanciasPromedio.push(prom);
+    }
+    distanciasPromedio.sort((a, b) => a - b);
+
+    // Percentil 95 como umbral de anomalía
+    const idxP95 = Math.floor(distanciasPromedio.length * 0.95);
+    return distanciasPromedio[idxP95];
+}
+
+// =====================================================================
+// Evaluar la confiabilidad de una predicción
+// Retorna { nivel, problemas, mensaje }
+// =====================================================================
+function evaluarConfiabilidad(muestraNueva, datosEntrenamiento,
+                              parametros, resultado, umbralAnomalia) {
+    const problemas = [];
+
+    // 1. Predicción ambigua: la probabilidad máxima es < 50 %
+    const probMax = Math.max(...resultado.probabilidades);
+    if (probMax < 0.5) {
+        problemas.push({
+            tipo: 'ambigua',
+            mensaje: `La predicción es ambigua: la clase más probable solo tiene ${(probMax*100).toFixed(0)}% de confianza.`
+        });
+    }
+
+    // 2. Muestra fuera del dominio: distancia promedio a los k vecinos > umbral
+    const muestraStd = estandarizar(muestraNueva, parametros, FEATURE_NAMES);
+    const distancias = datosEntrenamiento.map(d =>
+        distanciaEuclidiana(muestraStd,
+            estandarizar(d, parametros, FEATURE_NAMES), FEATURE_NAMES)
+    );
+    distancias.sort((a, b) => a - b);
+    const kVecinos = distancias.slice(0, K_VECINOS);
+    const distMedia = kVecinos.reduce((a, b) => a + b, 0) / K_VECINOS;
+    const factorAnomalia = distMedia / umbralAnomalia;
+    if (factorAnomalia > 1.5) {
+        problemas.push({
+            tipo: 'anomala',
+            mensaje: `La combinación de valores que estableciste se aleja considerablemente de los suelos del dataset (${factorAnomalia.toFixed(1)}× sobre el umbral). El modelo no fue entrenado para casos similares.`
+        });
+    } else if (factorAnomalia > 1.0) {
+        problemas.push({
+            tipo: 'limite',
+            mensaje: `Tu muestra está en el límite del dominio del modelo. La predicción puede ser menos confiable.`
+        });
+    }
+
+    // 3. Textura incoherente: SAND + SILT + CLAY debería sumar cerca de 100 %
+    //    (sólo si están entre las features del modelo)
+    if (FEATURE_NAMES.includes('SAND') &&
+        FEATURE_NAMES.includes('SILT') &&
+        FEATURE_NAMES.includes('CLAY')) {
+        const suma = muestraNueva.SAND + muestraNueva.SILT + muestraNueva.CLAY;
+        if (suma < 80 || suma > 130) {
+            problemas.push({
+                tipo: 'textura',
+                mensaje: `Arena + Limo + Arcilla suman ${suma.toFixed(0)} %, fuera del rango realista esperado (90-110 %).`
+            });
+        }
+    }
+
+    // Determinar nivel global
+    let nivel = 'alto';
+    if (problemas.some(p => p.tipo === 'anomala' || p.tipo === 'textura')) {
+        nivel = 'bajo';
+    } else if (problemas.length > 0) {
+        nivel = 'medio';
+    }
+
+    return { nivel, problemas, factorAnomalia, probMax };
+}
+
+// =====================================================================
 // Recomendaciones agronómicas por clase
 // =====================================================================
 const RECOMENDACIONES = {
