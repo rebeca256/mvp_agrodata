@@ -550,9 +550,57 @@ footer {
 footer p { margin: 0; opacity: 0.9; }
 
 /* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+    /* ===== Sliders más amigables para móvil/tablet ===== */
+    .slider-row {
+        grid-template-columns: 58px 1fr 76px;
+        padding: 16px 0;             /* más aire vertical */
+        gap: 12px;
+    }
+    .slider-row label {
+        font-size: 1em;
+        padding: 8px 10px;
+    }
+    /* Track más grueso para tap preciso */
+    .slider-row input[type="range"] {
+        height: 14px;
+        border-radius: 8px;
+    }
+    /* Thumb más grande para manipular con dedo */
+    .slider-row input[type="range"]::-webkit-slider-thumb {
+        width: 30px;
+        height: 30px;
+        border-width: 3px;
+        box-shadow: 0 4px 10px rgba(52, 152, 219, 0.5),
+                    inset 0 -1px 3px rgba(0, 0, 0, 0.15);
+    }
+    .slider-row input[type="range"]::-moz-range-thumb {
+        width: 30px;
+        height: 30px;
+        border-width: 3px;
+    }
+    .slider-row .valor {
+        font-size: 0.95em;
+        padding: 8px 10px;
+    }
+    .slider-row .rango {
+        font-size: 0.78em;
+    }
+    .sliders-panel,
+    .radar-panel {
+        padding: 18px 14px;
+    }
+    /* Navbar con scroll horizontal disimulado */
+    .navbar a { padding: 14px 16px; }
+}
+
 @media (max-width: 600px) {
     .hero h1 { font-size: 2em; }
     .hero .tagline { font-size: 1.05em; }
     .section { padding: 24px 18px; }
     .section h2 { font-size: 1.5em; }
+    /* En pantallas muy pequeñas, el slider ocupa todo el ancho */
+    .slider-row { grid-template-columns: 52px 1fr 70px; gap: 8px; }
+    .preset-buttons { flex-direction: column; }
+    .preset-buttons .btn { width: 100%; }
 }
