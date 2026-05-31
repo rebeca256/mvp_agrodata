@@ -6,6 +6,14 @@
 
 class Radar3D {
     constructor(containerId, features, options = {}) {
+        const log = window.DEBUG ? window.DEBUG.log : console.log;
+        const err = window.DEBUG ? window.DEBUG.err : console.error;
+
+        log('    [Radar3D] Constructor llamado con:');
+        log('      containerId:', containerId);
+        log('      features:', features);
+        log('      options:', options);
+
         this.containerId = containerId;
         this.features = features;
         this.numAxes = features.length;
@@ -15,22 +23,39 @@ class Radar3D {
             width: 520,
             height: 520,
             margin: 60,
-            tiltAngle: 0.45,       // qué tanto inclinar el radar (factor 0-1)
-            levels: 5,             // anillos concéntricos
+            tiltAngle: 0.45,
+            levels: 5,
             maxValue: 100,
             transitionMs: 600,
             ...options
         };
 
         this.datasets = [];
-        this.init();
+
+        try {
+            this.init();
+        } catch (e) {
+            err('    [Radar3D] Error en init():', e.message, e.stack);
+            throw e;
+        }
     }
 
     // -----------------------------------------------------------------
     // Inicialización: crear SVG, defs, anillos, ejes, labels
     // -----------------------------------------------------------------
     init() {
+        const log = window.DEBUG ? window.DEBUG.log : console.log;
+        const ok = window.DEBUG ? window.DEBUG.ok : console.log;
+        const err = window.DEBUG ? window.DEBUG.err : console.error;
+
+        log('    [Radar3D] init() iniciando...');
+
         const container = d3.select('#' + this.containerId);
+        if (container.empty()) {
+            err('    [Radar3D] No se encontró el contenedor #' + this.containerId);
+            throw new Error('Contenedor no encontrado: #' + this.containerId);
+        }
+        log('    [Radar3D] Contenedor seleccionado con d3');
         container.selectAll('*').remove();
 
         const w = this.opts.width;
@@ -38,9 +63,10 @@ class Radar3D {
         const cx = w / 2;
         const cy = h / 2;
         const radius = Math.min(w, h) / 2 - this.opts.margin;
-        // Radios horizontal y vertical para efecto isométrico
         this.rx = radius;
         this.ry = radius * (1 - this.opts.tiltAngle * 0.45);
+
+        log('    [Radar3D] Dimensiones: w=' + w + ', h=' + h + ', rx=' + this.rx.toFixed(1) + ', ry=' + this.ry.toFixed(1));
 
         this.svg = container
             .append('svg')
@@ -49,19 +75,34 @@ class Radar3D {
             .style('width', '100%')
             .style('height', 'auto')
             .style('display', 'block');
+        ok('    [Radar3D] SVG creado');
 
         this.cx = cx;
         this.cy = cy;
 
-        this._crearDefs();
-        this._crearBaseEllipse();
-        this._crearAnillos();
-        this._crearEjes();
-        this._crearLabels();
+        const pasos = [
+            ['_crearDefs', () => this._crearDefs()],
+            ['_crearBaseEllipse', () => this._crearBaseEllipse()],
+            ['_crearAnillos', () => this._crearAnillos()],
+            ['_crearEjes', () => this._crearEjes()],
+            ['_crearLabels', () => this._crearLabels()]
+        ];
+
+        pasos.forEach(([nombre, fn]) => {
+            try {
+                fn();
+                log('    [Radar3D] ✓ ' + nombre + '()');
+            } catch (e) {
+                err('    [Radar3D] ✗ ' + nombre + '() falló:', e.message);
+                throw e;
+            }
+        });
 
         // Contenedor para los polígonos (datos)
         this.polygonsGroup = this.svg.append('g').attr('class', 'polygons');
         this.pointsGroup = this.svg.append('g').attr('class', 'points');
+
+        ok('    [Radar3D] init() completado');
     }
 
     // -----------------------------------------------------------------
@@ -252,6 +293,11 @@ class Radar3D {
     // datasets = [{ label, data, color, gradient, esPrincipal }]
     // -----------------------------------------------------------------
     setDatasets(datasets) {
+        const log = window.DEBUG ? window.DEBUG.log : console.log;
+        const ok = window.DEBUG ? window.DEBUG.ok : console.log;
+        const err = window.DEBUG ? window.DEBUG.err : console.error;
+
+        log('    [Radar3D] setDatasets() con', datasets.length, 'datasets');
         this.datasets = datasets;
 
         // Eliminar contenido viejo
@@ -259,14 +305,33 @@ class Radar3D {
         this.pointsGroup.selectAll('*').remove();
 
         // Dibujar perfiles secundarios primero (atrás)
-        datasets
-            .filter(d => !d.esPrincipal)
-            .forEach(ds => this._dibujarDataset(ds, false));
+        const secundarios = datasets.filter(d => !d.esPrincipal);
+        const principales = datasets.filter(d => d.esPrincipal);
 
-        // Dibujar perfil principal al frente
-        datasets
-            .filter(d => d.esPrincipal)
-            .forEach(ds => this._dibujarDataset(ds, true));
+        log('    [Radar3D] Secundarios:', secundarios.map(d => d.id));
+        log('    [Radar3D] Principal:', principales.map(d => d.id));
+
+        secundarios.forEach(ds => {
+            try {
+                this._dibujarDataset(ds, false);
+                log('    [Radar3D] ✓ Dibujado dataset secundario:', ds.id);
+            } catch (e) {
+                err('    [Radar3D] Error dibujando ' + ds.id + ':', e.message);
+                throw e;
+            }
+        });
+
+        principales.forEach(ds => {
+            try {
+                this._dibujarDataset(ds, true);
+                log('    [Radar3D] ✓ Dibujado dataset principal:', ds.id);
+            } catch (e) {
+                err('    [Radar3D] Error dibujando ' + ds.id + ':', e.message);
+                throw e;
+            }
+        });
+
+        ok('    [Radar3D] setDatasets() completado');
     }
 
     _dibujarDataset(ds, esPrincipal) {
