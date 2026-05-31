@@ -181,11 +181,11 @@
             </figure>
             <figure>
                 <img src="img/07_matriz_confusion.png" alt="Matriz de confusión" loading="lazy">
-                <figcaption><strong>Figura 7.</strong> Matriz de confusión del modelo KNN (k = 5) sobre el conjunto de prueba de 766 muestras. Exactitud global: 60.31 %.</figcaption>
+                <figcaption><strong>Figura 7.</strong> Matriz de confusión del modelo KNN optimizado (k = 13, 7 variables) sobre el conjunto de prueba de 766 muestras. Exactitud global: 72.32 %.</figcaption>
             </figure>
             <figure>
                 <img src="img/08_intervalo_confianza.png" alt="Intervalo de confianza" loading="lazy">
-                <figcaption><strong>Figura 8.</strong> Intervalo de confianza al 95 % (método de Wilson) para la exactitud: [56.8 %, 63.7 %], muy por encima del azar (33.3 %).</figcaption>
+                <figcaption><strong>Figura 8.</strong> Intervalo de confianza al 95 % (método de Wilson) para la exactitud: [69.0 %, 75.4 %], muy por encima del azar (33.3 %).</figcaption>
             </figure>
         </div>
     </section>
@@ -214,6 +214,31 @@
             <li><strong>Álgebra lineal</strong>: distancia euclidiana entre vectores, regla de Cramer.</li>
             <li><strong>Cálculo diferencial</strong>: optimización de la dosis de fertilización (N* = 100 kg/ha).</li>
         </ul>
+
+        <h3>Sobre la exactitud del modelo</h3>
+        <p>
+            El modelo KNN actual alcanza una <strong>exactitud del 72.32 %</strong> con
+            un intervalo de confianza al 95 % de <strong>[69.0 %, 75.4 %]</strong>, sobre
+            un conjunto de prueba de 766 muestras. La configuración óptima utiliza
+            <strong>k = 13 vecinos</strong> y <strong>7 variables</strong> seleccionadas
+            por correlación (N, SAND, CLAY, CEC, SILT, SAR, Mg).
+        </p>
+        <p>
+            Aunque se calcularon estadísticas descriptivas sobre las 16 variables
+            originales, la inclusión de todas en el modelo de clasificación introducía
+            ruido y reducía la exactitud al 60.31 %. Una etapa de
+            <strong>optimización de hiperparámetros</strong> (grid search sobre k) y
+            <strong>selección de variables por correlación absoluta</strong> permitió
+            mejorar el desempeño en más de 12 puntos sin necesidad de cambiar el algoritmo.
+        </p>
+        <p>
+            Es importante destacar que la <strong>clase Alta</strong> se predice con una
+            precisión del <strong>99.3 %</strong> y un recall del <strong>91.5 %</strong>
+            (F1 = 0.952), lo que significa que el modelo identifica suelos de alta
+            fertilidad de forma muy confiable. Esto representa una mejora cualitativa
+            importante frente al modelo preliminar (880 muestras, 12 variables), que
+            nunca lograba predecir esta clase debido al desbalance del dataset original.
+        </p>
 
         <h3>Conjunto de datos</h3>
         <p>

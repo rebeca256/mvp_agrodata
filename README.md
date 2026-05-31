@@ -8,17 +8,20 @@ para pequeños productores agrícolas mexicanos, desarrollado con HTML, CSS y Ja
 ## Sobre el proyecto
 
 AgroDataLocal clasifica la fertilidad del suelo de parcelas agrícolas en tres niveles
-(Baja, Media, Alta) a partir de 16 variables fisicoquímicas, utilizando el algoritmo
-**K-Nearest Neighbors (KNN)** con `k = 5` y distancia euclidiana.
+(Baja, Media, Alta) utilizando el algoritmo **K-Nearest Neighbors (KNN)** optimizado
+mediante grid search y selección de variables por correlación.
 
 | Característica | Valor |
 |----------------|-------|
 | Dataset | **3,826 muestras** del dataset oficial SAGARPA-FAO 2012 |
 | Cobertura geográfica | **32 estados** de la República Mexicana |
-| Variables | **16** (pH, EC, OM, BD, P, SAND, SILT, CLAY, N, K, Ca, Mg, Na, CEC, SAR, ESP) |
+| Variables disponibles | 16 (pH, EC, OM, BD, P, SAND, SILT, CLAY, N, K, Ca, Mg, Na, CEC, SAR, ESP) |
+| Variables usadas en el modelo | **7** (N, SAND, CLAY, CEC, SILT, SAR, Mg) |
+| Hiperparámetro `k` | **13** vecinos |
 | Clases | 3 (Baja / Media / Alta fertilidad) |
-| Exactitud del modelo | 60.31 % |
-| Intervalo de confianza al 95 % | [56.8 %, 63.7 %] |
+| Exactitud del modelo | **72.32 %** |
+| Intervalo de confianza al 95 % | **[69.0 %, 75.4 %]** |
+| Precision clase Alta | 99.3 % (F1 = 0.952) |
 | Licencia del dataset | CC0 (dominio público) |
 | Cita académica | Arroyo-Cruz et al. (2025), *European Journal of Soil Science* |
 
@@ -27,8 +30,9 @@ AgroDataLocal clasifica la fertilidad del suelo de parcelas agrícolas en tres n
 - **Análisis estadístico descriptivo** calculado en vivo en el navegador: media, mediana, moda,
   varianza, desviación estándar, mínimo y máximo de cada variable.
 - **Gráficas interactivas** generadas con Chart.js: distribución de clases y correlaciones.
-- **Simulador interactivo** con 16 sliders para los parámetros del suelo. La predicción del
-  modelo y la gráfica radar 3D se actualizan en vivo al mover cualquier slider.
+- **Simulador interactivo** con 7 sliders para los parámetros que el modelo utiliza
+  (N, SAND, CLAY, CEC, SILT, SAR, Mg). La predicción y la gráfica radar 3D se
+  actualizan en vivo al mover cualquier slider.
 - **Botones de preset** para cargar valores promedio de cada nivel de fertilidad.
 - **Galería de visualizaciones** con las 8 figuras del análisis (distribución, correlación,
   prueba t, regla de Cramer, cálculo diferencial, matriz de confusión, intervalo de confianza).

@@ -133,11 +133,14 @@ window.addEventListener('unhandledrejection', (e) => {
     // Tabla de estadísticas descriptivas
     // =====================================================================
     function renderTablaEstadisticas() {
-        const estadisticas = calcularEstadisticasCompletas(DATASET, FEATURE_NAMES);
+        // Para las estadísticas mostramos TODAS las variables del dataset (16),
+        // no solo las 7 que usa el modelo.
+        const todasVars = (typeof FEATURE_NAMES_ALL !== 'undefined') ? FEATURE_NAMES_ALL : FEATURE_NAMES;
+        const estadisticas = calcularEstadisticasCompletas(DATASET, todasVars);
         const tbody = document.querySelector('#tabla-estadisticas tbody');
         tbody.innerHTML = '';
 
-        FEATURE_NAMES.forEach(f => {
+        todasVars.forEach(f => {
             const e = estadisticas[f];
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -195,9 +198,10 @@ window.addEventListener('unhandledrejection', (e) => {
     // Gráfica: correlaciones con la fertilidad
     // =====================================================================
     function renderGraficaCorrelaciones() {
-        const correlaciones = calcularCorrelaciones(DATASET, FEATURE_NAMES);
-        // Ordenar por valor descendente
-        const sorted = FEATURE_NAMES
+        // Mostrar correlaciones de TODAS las variables (16) para transparencia.
+        const todasVars = (typeof FEATURE_NAMES_ALL !== 'undefined') ? FEATURE_NAMES_ALL : FEATURE_NAMES;
+        const correlaciones = calcularCorrelaciones(DATASET, todasVars);
+        const sorted = todasVars
             .map(f => ({ feature: f, valor: correlaciones[f] }))
             .sort((a, b) => b.valor - a.valor);
 

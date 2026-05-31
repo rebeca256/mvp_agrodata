@@ -2,33 +2,34 @@
 // AgroDataLocal — Algoritmo K-Nearest Neighbors en JavaScript puro
 // =====================================================================
 
-// Variables del nuevo dataset SAGARPA-FAO 2012 (16 variables fisicoquímicas)
-const FEATURE_NAMES = ['pH', 'EC', 'OM', 'BD', 'P', 'SAND', 'SILT', 'CLAY',
-                       'N', 'K', 'Ca', 'Mg', 'Na', 'CEC', 'SAR', 'ESP'];
+// =====================================================================
+// Modelo KNN optimizado mediante grid search y selección de variables
+// sobre el dataset SAGARPA-FAO 2012.
+// Resultado: k=13, 7 variables → exactitud 72.32 % (vs 60.31 % con k=5
+// y 16 variables). Las 9 variables eliminadas no aportaban información
+// predictiva relevante para la fertilidad del suelo.
+// =====================================================================
+const FEATURE_NAMES = ['N', 'SAND', 'CLAY', 'CEC', 'SILT', 'SAR', 'Mg'];
 
 // Descripciones de las variables (para mostrar en la UI)
 const FEATURE_DESCRIPTIONS = {
-    'pH':   'Acidez del suelo (0-14)',
-    'EC':   'Conductividad eléctrica (dS/m)',
-    'OM':   'Materia orgánica (%)',
-    'BD':   'Densidad aparente (g/cm³)',
-    'P':    'Fósforo (mg/kg)',
-    'SAND': 'Arena (%)',
-    'SILT': 'Limo (%)',
-    'CLAY': 'Arcilla (%)',
     'N':    'Nitrógeno (%)',
-    'K':    'Potasio (cmol/kg)',
-    'Ca':   'Calcio (cmol/kg)',
-    'Mg':   'Magnesio (cmol/kg)',
-    'Na':   'Sodio (cmol/kg)',
-    'CEC':  'Capacidad intercambio catiónico (cmol/kg)',
-    'SAR':  'Razón adsorción de sodio',
-    'ESP':  'Porcentaje sodio intercambiable (%)'
+    'SAND': 'Arena (%)',
+    'CLAY': 'Arcilla (%)',
+    'CEC':  'Capacidad de intercambio catiónico (cmol/kg)',
+    'SILT': 'Limo (%)',
+    'SAR':  'Razón de adsorción de sodio',
+    'Mg':   'Magnesio (cmol/kg)'
 };
+
+// Las 9 variables del dataset que NO se usan en el modelo (pero sí
+// aparecen en la sección de estadísticas descriptivas).
+const FEATURE_NAMES_ALL = ['pH', 'EC', 'OM', 'BD', 'P', 'SAND', 'SILT', 'CLAY',
+                           'N', 'K', 'Ca', 'Mg', 'Na', 'CEC', 'SAR', 'ESP'];
 
 const CLASS_NAMES = ['Baja', 'Media', 'Alta'];
 const CLASS_COLORS = ['#e74c3c', '#f39c12', '#27ae60'];
-const K_VECINOS = 5;
+const K_VECINOS = 13;
 
 // =====================================================================
 // Cálculos auxiliares: media y desviación estándar por columna
