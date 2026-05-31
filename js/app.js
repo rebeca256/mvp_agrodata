@@ -159,7 +159,7 @@
             row.className = 'slider-row';
             row.innerHTML = `
                 <label>${feature}</label>
-                <div>
+                <div class="slider-control">
                     <input type="range"
                         min="${rango.min}"
                         max="${rango.max}"
@@ -185,7 +185,7 @@
     }
 
     // =====================================================================
-    // Gráfica radar (Tu muestra vs perfiles de fertilidad)
+    // Gráfica radar 3D-isométrico con D3.js
     // =====================================================================
     function normalizarParaRadar(valores) {
         return FEATURE_NAMES.map(f => {
@@ -195,62 +195,68 @@
     }
 
     function renderGraficaRadar() {
-        const ctx = document.getElementById('chart-radar').getContext('2d');
-        estado.chartRadar = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: FEATURE_NAMES,
-                datasets: [
-                    {
-                        label: 'Tu muestra',
-                        data: normalizarParaRadar(estado.valoresActuales),
-                        backgroundColor: 'rgba(52, 152, 219, 0.3)',
-                        borderColor: '#3498db',
-                        borderWidth: 2.5,
-                        pointBackgroundColor: '#3498db',
-                    },
-                    {
-                        label: 'Perfil ALTA fertilidad',
-                        data: normalizarParaRadar(estado.perfiles[2]),
-                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                        borderColor: '#27ae60',
-                        borderWidth: 1.5,
-                        borderDash: [5, 5],
-                        pointRadius: 2,
-                    },
-                    {
-                        label: 'Perfil BAJA fertilidad',
-                        data: normalizarParaRadar(estado.perfiles[0]),
-                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                        borderColor: '#e74c3c',
-                        borderWidth: 1.5,
-                        borderDash: [5, 5],
-                        pointRadius: 2,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
-                scales: {
-                    r: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: { stepSize: 25, display: false },
-                        pointLabels: { font: { weight: 'bold', size: 12 } }
-                    }
-                }
-            }
+        estado.radar3d = new Radar3D('chart-radar-d3', FEATURE_NAMES, {
+            width: 560,
+            height: 560,
+            tiltAngle: 0.4,
+            transitionMs: 500
         });
+
+        estado.radar3d.setDatasets([
+            {
+                id: 'baja',
+                label: 'Perfil BAJA fertilidad',
+                data: normalizarParaRadar(estado.perfiles[0]),
+                color: '#c0392b',
+                gradient: 'gradBaja',
+                esPrincipal: false
+            },
+            {
+                id: 'alta',
+                label: 'Perfil ALTA fertilidad',
+                data: normalizarParaRadar(estado.perfiles[2]),
+                color: '#1e8449',
+                gradient: 'gradAlta',
+                esPrincipal: false
+            },
+            {
+                id: 'user',
+                label: 'Tu muestra',
+                data: normalizarParaRadar(estado.valoresActuales),
+                color: '#2874a6',
+                gradient: 'gradUsuario',
+                esPrincipal: true
+            }
+        ]);
+
+        // Renderizar leyenda manual
+        renderLeyendaRadar();
+    }
+
+    function renderLeyendaRadar() {
+        const leyendaHtml = `
+            <div class="radar-legend">
+                <div class="legend-item">
+                    <span class="legend-swatch swatch-user"></span>
+                    <span>Tu muestra</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-swatch swatch-alta"></span>
+                    <span>Perfil ALTA</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-swatch swatch-baja"></span>
+                    <span>Perfil BAJA</span>
+                </div>
+            </div>
+        `;
+        const container = document.getElementById('radar-legend-container');
+        if (container) container.innerHTML = leyendaHtml;
     }
 
     function actualizarRadar() {
-        if (!estado.chartRadar) return;
-        estado.chartRadar.data.datasets[0].data = normalizarParaRadar(estado.valoresActuales);
-        estado.chartRadar.update('none');
+        if (!estado.radar3d) return;
+        estado.radar3d.actualizarPrincipal(normalizarParaRadar(estado.valoresActuales));
     }
 
     // =====================================================================

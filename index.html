@@ -6,6 +6,7 @@
     <title>AgroDataLocal — Diagnóstico de Fertilidad de Suelo</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
 </head>
 <body>
 
@@ -118,9 +119,8 @@
 
             <div class="radar-panel">
                 <h3>Comparación contra perfiles</h3>
-                <div class="chart-container">
-                    <canvas id="chart-radar"></canvas>
-                </div>
+                <div id="chart-radar-d3" class="radar-3d-container"></div>
+                <div id="radar-legend-container"></div>
             </div>
         </div>
 
@@ -224,6 +224,7 @@
 <script src="js/data.js"></script>
 <script src="js/stats.js"></script>
 <script src="js/knn.js"></script>
+<script src="js/radar3d.js"></script>
 <script src="js/app.js"></script>
 
 </body>
