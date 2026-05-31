@@ -42,30 +42,43 @@ window.addEventListener('unhandledrejection', (e) => {
     // =====================================================================
     // Inicialización al cargar la página
     // =====================================================================
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         DEBUG.group('Inicio de la aplicación');
-        DEBUG.log('DOM cargado, ejecutando inicializarApp()');
+        DEBUG.log('DOM cargado');
         DEBUG.log('User agent:', navigator.userAgent);
+
+        // Cargar dataset asíncronamente (formato compacto: columns + rows)
+        const overlay = document.getElementById('loading-overlay');
+        try {
+            const tInicio = performance.now();
+            const respuesta = await fetch('data/dataset.json');
+            if (!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
+            const datosCompactos = await respuesta.json();
+            const cols = datosCompactos.columns;
+            // Hidratar a array de objetos para mantener compatibilidad con el resto del código
+            window.DATASET = datosCompactos.rows.map(fila => {
+                const obj = {};
+                for (let i = 0; i < cols.length; i++) obj[cols[i]] = fila[i];
+                return obj;
+            });
+            const tFinal = performance.now();
+            DEBUG.ok(`Dataset cargado en ${(tFinal - tInicio).toFixed(0)} ms (${window.DATASET.length} registros)`);
+            if (overlay) overlay.style.display = 'none';
+        } catch (e) {
+            DEBUG.err('Error al cargar dataset:', e.message);
+            if (overlay) {
+                overlay.innerHTML = `<p style="color:#c0392b">⚠ No se pudo cargar el dataset: ${e.message}</p>`;
+            }
+            DEBUG.groupEnd();
+            return;
+        }
 
         // Verificar dependencias
         DEBUG.log('--- Verificando dependencias ---');
-        DEBUG.log('window.d3 disponible:', typeof d3 !== 'undefined' ? '✓ SÍ (v' + (d3.version || '?') + ')' : '✗ NO');
-        DEBUG.log('window.Chart disponible:', typeof Chart !== 'undefined' ? '✓ SÍ' : '✗ NO');
-        DEBUG.log('window.Radar3D disponible:', typeof Radar3D !== 'undefined' ? '✓ SÍ' : '✗ NO');
-        DEBUG.log('window.DATASET disponible:', typeof DATASET !== 'undefined' ? '✓ SÍ (' + DATASET.length + ' registros)' : '✗ NO');
+        DEBUG.log('window.d3:', typeof d3 !== 'undefined' ? '✓ SÍ (v' + (d3.version || '?') + ')' : '✗ NO');
+        DEBUG.log('window.Chart:', typeof Chart !== 'undefined' ? '✓ SÍ' : '✗ NO');
+        DEBUG.log('window.Radar3D:', typeof Radar3D !== 'undefined' ? '✓ SÍ' : '✗ NO');
         DEBUG.log('FEATURE_NAMES:', typeof FEATURE_NAMES !== 'undefined' ? FEATURE_NAMES : '✗ NO DEFINIDO');
-
-        // Verificar contenedores en el DOM
-        DEBUG.log('--- Verificando contenedores DOM ---');
-        const contenedores = [
-            'tabla-estadisticas', 'chart-distribucion', 'chart-correlaciones',
-            'sliders-container', 'chart-radar-d3', 'radar-legend-container',
-            'pred-clase-nombre', 'pred-probs', 'pred-reco'
-        ];
-        contenedores.forEach(id => {
-            const el = document.getElementById(id);
-            DEBUG.log(`  #${id}:`, el ? '✓ encontrado' : '✗ NO ENCONTRADO');
-        });
 
         try {
             inicializarApp();
