@@ -65,10 +65,10 @@
     <section id="estadisticas" class="section">
         <h2>Análisis estadístico descriptivo</h2>
         <p>
-            Para cada una de las 12 variables fisicoquímicas se calculan medidas de tendencia
+            Para cada una de las 16 variables fisicoquímicas se calculan medidas de tendencia
             central (media, mediana, moda) y medidas de dispersión (varianza, desviación estándar).
-            Estos cálculos se realizan <strong>en vivo en tu navegador</strong> a partir del
-            dataset cargado.
+            Estos cálculos se realizan <strong>en vivo en tu navegador</strong> a partir de las
+            3,826 muestras del dataset SAGARPA-FAO cargado.
         </p>
 
         <div class="table-wrapper">
@@ -96,8 +96,9 @@
 
         <h3>Correlación de cada variable con la fertilidad</h3>
         <p>
-            Coeficiente de correlación de Pearson. El <strong>nitrógeno (N)</strong> destaca con
-            r = 0.707, confirmando que es el principal predictor de la fertilidad.
+            Coeficiente de correlación de Pearson calculado sobre las 3,826 muestras. El
+            <strong>nitrógeno (N)</strong> destaca con r = 0.503, confirmando que es el
+            principal predictor de la fertilidad entre las 16 variables analizadas.
         </p>
         <div class="chart-container chart-container-small">
             <canvas id="chart-correlaciones"></canvas>
@@ -146,15 +147,24 @@
     <section id="visualizaciones" class="section">
         <h2>Visualizaciones del análisis</h2>
         <p>
-            Estas gráficas resumen los principales hallazgos del proyecto: distribución de los
-            datos, correlaciones, validación estadística, y los modelos matemáticos aplicados
-            (regresión por regla de Cramer y optimización por cálculo diferencial).
+            Las siguientes gráficas corresponden al <strong>análisis original del proyecto
+            académico</strong> realizado con el dataset preliminar de 880 muestras. Documentan
+            los principales hallazgos: distribuciones, correlaciones, validación estadística
+            mediante prueba t e intervalo de confianza, así como los modelos matemáticos
+            aplicados (regresión por regla de Cramer y optimización por cálculo diferencial).
+            Se incluyen como referencia histórica del proceso de construcción del modelo.
+        </p>
+        <p style="background:#fffbe6;border-left:4px solid #f1c40f;padding:12px 16px;border-radius:6px;font-size:0.93em;">
+            <strong>Nota:</strong> el modelo actual del simulador interactivo utiliza el
+            dataset oficial SAGARPA-FAO 2012 con 3,826 muestras y 16 variables fisicoquímicas,
+            distinto al de estas gráficas. Las métricas en vivo (estadísticas, distribución,
+            correlaciones) sí provienen del dataset actual.
         </p>
 
         <div class="gallery">
             <figure>
                 <img src="img/01_distribucion_clases.png" alt="Distribución de clases" loading="lazy">
-                <figcaption><strong>Figura 1.</strong> Distribución de las 880 muestras por nivel de fertilidad.</figcaption>
+                <figcaption><strong>Figura 1.</strong> Distribución de las muestras del dataset por nivel de fertilidad (basada en muestras del modelo anterior, referencia histórica).</figcaption>
             </figure>
             <figure>
                 <img src="img/02_correlacion_variables.png" alt="Correlación de variables" loading="lazy">
