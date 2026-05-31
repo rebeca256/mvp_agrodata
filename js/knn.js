@@ -11,19 +11,50 @@
 // =====================================================================
 const FEATURE_NAMES = ['N', 'SAND', 'CLAY', 'CEC', 'SILT', 'SAR', 'Mg'];
 
-// Descripciones de las variables (para mostrar en la UI)
-const FEATURE_DESCRIPTIONS = {
-    'N':    'Nitrógeno (%)',
-    'SAND': 'Arena (%)',
-    'CLAY': 'Arcilla (%)',
-    'CEC':  'Capacidad de intercambio catiónico (cmol/kg)',
-    'SILT': 'Limo (%)',
-    'SAR':  'Razón de adsorción de sodio',
-    'Mg':   'Magnesio (cmol/kg)'
+// Diccionario de información detallada de cada variable.
+// Se usa para tooltips en sliders, en la tabla de estadísticas y en el glosario.
+const FEATURE_INFO = {
+    'pH':   { nombre: 'pH', unidad: '0-14',
+              desc: 'Acidez o alcalinidad del suelo. Valores < 6.5 = ácido, 6.5-7.5 = neutro, > 7.5 = alcalino.' },
+    'EC':   { nombre: 'Conductividad eléctrica', unidad: 'dS/m',
+              desc: 'Mide la salinidad del suelo. Valores altos indican exceso de sales que pueden afectar a las plantas.' },
+    'OM':   { nombre: 'Materia orgánica', unidad: '%',
+              desc: 'Porcentaje de residuos vegetales y animales descompuestos. Indicador clave de salud del suelo.' },
+    'BD':   { nombre: 'Densidad aparente', unidad: 'g/cm³',
+              desc: 'Masa de suelo seco por volumen. Valores altos indican compactación, malos para raíces.' },
+    'P':    { nombre: 'Fósforo', unidad: 'mg/kg',
+              desc: 'Macronutriente esencial para el desarrollo de raíces y floración del cultivo.' },
+    'SAND': { nombre: 'Arena', unidad: '%',
+              desc: 'Porcentaje de partículas grandes (0.05-2 mm). Suelos arenosos drenan rápido pero retienen poco agua.' },
+    'SILT': { nombre: 'Limo', unidad: '%',
+              desc: 'Porcentaje de partículas medianas (0.002-0.05 mm). Buen equilibrio entre drenaje y retención de agua.' },
+    'CLAY': { nombre: 'Arcilla', unidad: '%',
+              desc: 'Porcentaje de partículas finas (< 0.002 mm). Retiene mucha agua y nutrientes pero drena lento.' },
+    'N':    { nombre: 'Nitrógeno', unidad: '%',
+              desc: 'Macronutriente más importante para el crecimiento vegetativo. Principal indicador de fertilidad.' },
+    'K':    { nombre: 'Potasio', unidad: 'cmol/kg',
+              desc: 'Macronutriente para resistencia, calidad de fruto y regulación hídrica de la planta.' },
+    'Ca':   { nombre: 'Calcio', unidad: 'cmol/kg',
+              desc: 'Catión secundario. Da estructura al suelo, estabiliza la membrana de las raíces.' },
+    'Mg':   { nombre: 'Magnesio', unidad: 'cmol/kg',
+              desc: 'Componente esencial de la clorofila. Su carencia se ve en hojas amarillentas entre las venas.' },
+    'Na':   { nombre: 'Sodio', unidad: 'cmol/kg',
+              desc: 'No es nutriente esencial. Concentraciones altas indican salinidad y afectan a las plantas.' },
+    'CEC':  { nombre: 'Capacidad de Intercambio Catiónico', unidad: 'cmol/kg',
+              desc: 'Capacidad del suelo para retener cationes (K, Ca, Mg, Na). Cuanto mayor, más fértil potencialmente.' },
+    'SAR':  { nombre: 'Razón de Adsorción de Sodio', unidad: 'adimensional',
+              desc: 'Riesgo de sodicidad: relación entre sodio y otros cationes. Valores altos degradan la estructura del suelo.' },
+    'ESP':  { nombre: 'Porcentaje de Sodio Intercambiable', unidad: '%',
+              desc: 'Proporción de sodio respecto al total de cationes. > 15 % indica suelos sódicos.' }
 };
 
-// Las 9 variables del dataset que NO se usan en el modelo (pero sí
-// aparecen en la sección de estadísticas descriptivas).
+// Alias corto para compatibilidad con código existente
+const FEATURE_DESCRIPTIONS = Object.fromEntries(
+    Object.entries(FEATURE_INFO).map(([k, v]) => [k, `${v.nombre} (${v.unidad})`])
+);
+
+// Las 16 variables del dataset (incluye las 9 que no se usan en el modelo
+// pero sí aparecen en la sección de estadísticas descriptivas).
 const FEATURE_NAMES_ALL = ['pH', 'EC', 'OM', 'BD', 'P', 'SAND', 'SILT', 'CLAY',
                            'N', 'K', 'Ca', 'Mg', 'Na', 'CEC', 'SAR', 'ESP'];
 

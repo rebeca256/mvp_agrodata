@@ -107,6 +107,7 @@ window.addEventListener('unhandledrejection', (e) => {
         // 3. Renderizar cada sección con try/catch individual
         const secciones = [
             ['Tabla estadísticas', renderTablaEstadisticas],
+            ['Glosario de variables', renderGlosario],
             ['Gráfica distribución', renderGraficaDistribucion],
             ['Gráfica correlaciones', renderGraficaCorrelaciones],
             ['Sliders', renderSliders],
@@ -142,9 +143,13 @@ window.addEventListener('unhandledrejection', (e) => {
 
         todasVars.forEach(f => {
             const e = estadisticas[f];
+            const info = (typeof FEATURE_INFO !== 'undefined' && FEATURE_INFO[f]) || null;
+            const tooltipCell = info
+                ? `<td><strong class="var-name" tabindex="0">${f}<span class="tooltip tooltip-table"><strong>${info.nombre}</strong> <em>(${info.unidad})</em><br>${info.desc}</span></strong></td>`
+                : `<td><strong>${f}</strong></td>`;
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><strong>${f}</strong></td>
+                ${tooltipCell}
                 <td>${e.media.toFixed(2)}</td>
                 <td>${e.mediana.toFixed(2)}</td>
                 <td>${e.moda.toFixed(2)}</td>
@@ -152,6 +157,30 @@ window.addEventListener('unhandledrejection', (e) => {
                 <td>${e.varianza.toFixed(2)}</td>
                 <td>${e.min.toFixed(2)}</td>
                 <td>${e.max.toFixed(2)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // =====================================================================
+    // Glosario de variables (en Acerca de)
+    // =====================================================================
+    function renderGlosario() {
+        const tbody = document.getElementById('glosario-tbody');
+        if (!tbody || typeof FEATURE_INFO === 'undefined') return;
+        const usadasModelo = new Set(FEATURE_NAMES);
+        const todasVars = FEATURE_NAMES_ALL;
+        tbody.innerHTML = '';
+        todasVars.forEach(f => {
+            const info = FEATURE_INFO[f];
+            if (!info) return;
+            const marcaModelo = usadasModelo.has(f) ? ' *' : '';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${f}${marcaModelo}</td>
+                <td>${info.nombre}</td>
+                <td>${info.unidad}</td>
+                <td>${info.desc}</td>
             `;
             tbody.appendChild(tr);
         });
@@ -246,15 +275,29 @@ window.addEventListener('unhandledrejection', (e) => {
 
             const row = document.createElement('div');
             row.className = 'slider-row';
+            const info = (typeof FEATURE_INFO !== 'undefined' && FEATURE_INFO[feature]) || null;
+            const tooltipText = info
+                ? `${info.nombre} (${info.unidad})\n\n${info.desc}`
+                : feature;
+            const tooltipHTML = info
+                ? `<span class="info-icon" tabindex="0" aria-label="Información sobre ${feature}">ℹ
+                       <span class="tooltip">
+                           <strong>${info.nombre}</strong>
+                           <em>(${info.unidad})</em><br>
+                           ${info.desc}
+                       </span>
+                   </span>`
+                : '';
             row.innerHTML = `
-                <label>${feature}</label>
+                <label>${feature}${tooltipHTML}</label>
                 <div class="slider-control">
                     <input type="range"
                         min="${rango.min}"
                         max="${rango.max}"
                         step="${step}"
                         value="${valorActual}"
-                        data-feature="${feature}">
+                        data-feature="${feature}"
+                        title="${tooltipText.replace(/"/g, '&quot;')}">
                     <div class="rango">[${rango.min.toFixed(1)} — ${rango.max.toFixed(1)}]</div>
                 </div>
                 <div class="valor" id="valor-${feature}">${valorActual.toFixed(2)}</div>
