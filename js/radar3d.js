@@ -72,9 +72,10 @@ class Radar3D {
             .append('svg')
             .attr('viewBox', `0 0 ${w} ${h}`)
             .attr('preserveAspectRatio', 'xMidYMid meet')
-            .style('width', '100%')
-            .style('height', 'auto')
-            .style('display', 'block');
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .style('display', 'block')
+            .style('overflow', 'visible');
         ok('    [Radar3D] SVG creado');
 
         this.cx = cx;
