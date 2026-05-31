@@ -24,6 +24,7 @@
         <a href="#estadisticas">Estadísticas</a>
         <a href="#simulador">Simulador</a>
         <a href="#como-funciona">¿Cómo funciona?</a>
+        <a href="#mapa">Mapa</a>
         <a href="#visualizaciones">Visualizaciones</a>
         <a href="#acerca">Acerca de</a>
         <a href="#privacidad">Privacidad</a>
@@ -286,6 +287,50 @@
         </p>
     </section>
 
+    <!-- ===================== MAPA INTERACTIVO ===================== -->
+    <section id="mapa" class="section">
+        <h2>Mapa interactivo de México</h2>
+        <p>
+            Las 3,826 muestras del dataset SAGARPA-FAO 2012 están distribuidas en los 32 estados
+            del país. Aquí puedes explorar esa distribución de tres formas distintas: cuántas
+            muestras hay en cada estado, cuál es la clase de fertilidad <em>predominante</em> en
+            cada uno, o cuál es el promedio de cualquiera de las 7 variables del modelo.
+            Pasa el cursor sobre un estado para ver el valor y haz clic para abrir su panel completo.
+        </p>
+
+        <div class="mapa-controles">
+            <span class="mapa-controles-label">Ver mapa por:</span>
+            <div class="mapa-modo-btns" role="group">
+                <button type="button" class="mapa-btn active" data-modo="muestras">Nº de muestras</button>
+                <button type="button" class="mapa-btn" data-modo="clase">Clase predominante</button>
+                <button type="button" class="mapa-btn" data-modo="variable">Promedio de variable</button>
+            </div>
+            <select id="mapa-var-select" class="mapa-var-select" aria-label="Variable a mostrar">
+                <option value="N">Nitrógeno (N) %</option>
+                <option value="SAND">Arena (SAND) %</option>
+                <option value="SILT">Limo (SILT) %</option>
+                <option value="CLAY">Arcilla (CLAY) %</option>
+                <option value="CEC">CIC (cmol/kg)</option>
+                <option value="SAR">SAR</option>
+                <option value="Mg">Magnesio (Mg) cmol/kg</option>
+            </select>
+        </div>
+
+        <div class="mapa-layout">
+            <div class="mapa-wrapper">
+                <svg id="mapa-svg" role="img" aria-label="Mapa de los estados de México coloreados según el modo seleccionado"></svg>
+                <div id="mapa-leyenda" class="mapa-leyenda"></div>
+            </div>
+            <aside id="mapa-panel" class="mapa-panel">
+                <div class="mapa-panel-vacio">
+                    <div class="mapa-panel-icono">📍</div>
+                    <p>Haz <strong>click en un estado</strong> para ver sus estadísticas detalladas.</p>
+                    <p class="mapa-panel-hint">También puedes pasar el cursor sobre un estado para ver el valor del modo actual.</p>
+                </div>
+            </aside>
+        </div>
+    </section>
+
     <!-- ===================== VISUALIZACIONES ===================== -->
     <section id="visualizaciones" class="section">
         <h2>Visualizaciones del análisis</h2>
@@ -500,6 +545,7 @@
 <script src="js/stats.js"></script>
 <script src="js/knn.js"></script>
 <script src="js/radar3d.js"></script>
+<script src="js/mapa.js"></script>
 <script src="js/app.js" defer></script>
 
 </body>

@@ -87,6 +87,12 @@ window.addEventListener('unhandledrejection', (e) => {
             DEBUG.err('Error en inicializarApp():', e.message);
             DEBUG.err('Stack:', e.stack);
         }
+
+        // Mapa interactivo de México (no bloquea la app si falla)
+        if (typeof window.Mapa !== 'undefined' && typeof window.Mapa.init === 'function') {
+            window.Mapa.init().catch(e => DEBUG.err('Error en Mapa.init():', e.message));
+        }
+
         DEBUG.groupEnd();
     });
 
