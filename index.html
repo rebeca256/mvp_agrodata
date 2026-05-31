@@ -35,22 +35,30 @@
         <h2>Resumen del proyecto</h2>
         <p>
             <strong>AgroDataLocal</strong> es un sistema que clasifica la fertilidad del suelo de
-            parcelas agrícolas a partir de 12 variables fisicoquímicas, utilizando el algoritmo
-            <strong>K-Nearest Neighbors (KNN)</strong>. El modelo fue entrenado con 880 muestras
-            de suelo mexicano y alcanza una exactitud del 82.39 %.
+            parcelas agrícolas a partir de 16 variables fisicoquímicas, utilizando el algoritmo
+            <strong>K-Nearest Neighbors (KNN)</strong>. El modelo fue entrenado con el
+            <strong>dataset oficial nacional mexicano</strong> de SAGARPA-FAO (2012), que contiene
+            3,826 muestras de suelo de los 32 estados de la República.
         </p>
         <p>
             El propósito es ofrecer a pequeños productores una herramienta accesible para recibir
-            recomendaciones de fertilización basadas en datos, reduciendo costos y minimizando el
-            impacto ambiental por sobre-fertilización.
+            recomendaciones de fertilización basadas en datos reales, reduciendo costos y
+            minimizando el impacto ambiental por sobre-fertilización.
         </p>
 
         <div class="metric-grid">
-            <div class="metric-card"><div class="num">880</div><div class="lbl">muestras</div></div>
-            <div class="metric-card"><div class="num">12</div><div class="lbl">variables</div></div>
+            <div class="metric-card"><div class="num">3,826</div><div class="lbl">muestras</div></div>
+            <div class="metric-card"><div class="num">16</div><div class="lbl">variables</div></div>
+            <div class="metric-card"><div class="num">32</div><div class="lbl">estados</div></div>
             <div class="metric-card"><div class="num">3</div><div class="lbl">clases</div></div>
-            <div class="metric-card"><div class="num">82.39%</div><div class="lbl">exactitud</div></div>
         </div>
+
+        <p style="margin-top:18px;font-size:0.95em;color:var(--color-texto-suave)">
+            <strong>Fuente:</strong> Base de datos nacional <em>SAGARPA-FAO 2012</em>, publicada por
+            <a href="https://doi.org/10.6073/pasta/5d435c1459d48dc26ddf93ad933ca4b0" target="_blank">
+            Arroyo-Cruz et al. (2025)</a> en el <em>European Journal of Soil Science</em>,
+            distribuida bajo licencia CC0 (dominio público).
+        </p>
     </section>
 
     <!-- ===================== ESTADÍSTICAS ===================== -->
@@ -206,9 +214,23 @@
 
         <h3>Conjunto de datos</h3>
         <p>
-            880 muestras de suelo mexicano con 12 variables fisicoquímicas:
-            Nitrógeno (N), Fósforo (P), Potasio (K), pH, Conductividad eléctrica (EC), Carbono
-            orgánico (OC), Azufre (S), Zinc (Zn), Hierro (Fe), Cobre (Cu), Manganeso (Mn) y Boro (B).
+            <strong>3,826 muestras</strong> de suelo procedentes de los 32 estados de la República
+            Mexicana, surveyed entre diciembre 2011 y abril 2012 por la Secretaría de Agricultura
+            (SAGARPA) en colaboración con la FAO. Las 16 variables fisicoquímicas analizadas son:
+        </p>
+        <ul>
+            <li><strong>Químicas</strong>: pH (acidez), EC (conductividad), OM (materia orgánica),
+                N (nitrógeno), P (fósforo), K (potasio), Ca (calcio), Mg (magnesio), Na (sodio).</li>
+            <li><strong>Físicas</strong>: BD (densidad aparente), SAND (arena), SILT (limo),
+                CLAY (arcilla).</li>
+            <li><strong>Capacidad de intercambio</strong>: CEC (capacidad de intercambio catiónico),
+                SAR (razón de adsorción de sodio), ESP (porcentaje de sodio intercambiable).</li>
+        </ul>
+        <p>
+            <strong>Cita:</strong> Arroyo-Cruz, C.E. et al. (2025). Synthesis of a National Soil
+            Dataset Across Productive Land in Mexico. <em>European Journal of Soil Science</em>.
+            DOI: <a href="https://doi.org/10.6073/pasta/5d435c1459d48dc26ddf93ad933ca4b0" target="_blank">
+            10.6073/pasta/5d435c1459d48dc26ddf93ad933ca4b0</a>.
         </p>
     </section>
 

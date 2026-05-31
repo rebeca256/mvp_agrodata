@@ -2,7 +2,30 @@
 // AgroDataLocal — Algoritmo K-Nearest Neighbors en JavaScript puro
 // =====================================================================
 
-const FEATURE_NAMES = ['N', 'P', 'K', 'pH', 'EC', 'OC', 'S', 'Zn', 'Fe', 'Cu', 'Mn', 'B'];
+// Variables del nuevo dataset SAGARPA-FAO 2012 (16 variables fisicoquímicas)
+const FEATURE_NAMES = ['pH', 'EC', 'OM', 'BD', 'P', 'SAND', 'SILT', 'CLAY',
+                       'N', 'K', 'Ca', 'Mg', 'Na', 'CEC', 'SAR', 'ESP'];
+
+// Descripciones de las variables (para mostrar en la UI)
+const FEATURE_DESCRIPTIONS = {
+    'pH':   'Acidez del suelo (0-14)',
+    'EC':   'Conductividad eléctrica (dS/m)',
+    'OM':   'Materia orgánica (%)',
+    'BD':   'Densidad aparente (g/cm³)',
+    'P':    'Fósforo (mg/kg)',
+    'SAND': 'Arena (%)',
+    'SILT': 'Limo (%)',
+    'CLAY': 'Arcilla (%)',
+    'N':    'Nitrógeno (%)',
+    'K':    'Potasio (cmol/kg)',
+    'Ca':   'Calcio (cmol/kg)',
+    'Mg':   'Magnesio (cmol/kg)',
+    'Na':   'Sodio (cmol/kg)',
+    'CEC':  'Capacidad intercambio catiónico (cmol/kg)',
+    'SAR':  'Razón adsorción de sodio',
+    'ESP':  'Porcentaje sodio intercambiable (%)'
+};
+
 const CLASS_NAMES = ['Baja', 'Media', 'Alta'];
 const CLASS_COLORS = ['#e74c3c', '#f39c12', '#27ae60'];
 const K_VECINOS = 5;
